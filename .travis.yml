@@ -1,0 +1,18 @@
+dist: xenial
+language: c++
+os: linux
+compiler: 
+ - g++
+
+env:
+  global:
+    - PYTHONLIB=/opt/python/3.7/lib/
+    - PYTHONINCLUDE=/opt/python/3.7/include/python3.7m/
+
+before_install:
+ - sudo apt-get install qt5-default
+
+
+script:
+ - qmake Test_Python.pro
+ - make

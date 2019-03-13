@@ -23,10 +23,16 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../AppData/Local/Programs/Python/Python37/libs/ -lpython37
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../AppData/Local/Programs/Python/Python37/libs/ -lpython37d
-
-INCLUDEPATH += $$PWD/../../AppData/Local/Programs/Python/Python37/include
-DEPENDPATH += $$PWD/../../AppData/Local/Programs/Python/Python37/include
-
 DISTFILES +=
+
+HEADERS += \
+    pyhelper.h
+
+message($$(PYTHONLIB))
+message($$(PYTHONINCLUDE))
+win32:CONFIG(release, debug|release): LIBS += -L$$(PYTHONLIB)/ -lpython37
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$(PYTHONLIB)/ -lpython37d
+else:unix: LIBS += -L$$(PYTHONLIB)/ -lpython3.7m
+
+INCLUDEPATH += $$(PYTHONINCLUDE)
+DEPENDPATH += $$(PYTHONINCLUDE)
