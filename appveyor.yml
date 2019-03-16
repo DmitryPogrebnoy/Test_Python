@@ -6,7 +6,7 @@ shallow_clone: true
 install:
   - set QTDIR=C:\Qt\5.12.1\mingw73_64
   - set PATH=%PATH%;%QTDIR%\bin;C:\MinGW\bin
-  - set PYTHONPATH = C:\Python37-x64
+  - set PYTHONPATH = C:\Python37
   
 build_script:
   - qmake Test_Python.pro
