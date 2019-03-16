@@ -4,7 +4,6 @@ environment:
 
 install:
   - set QTDIR=C:\Qt\5.12.1\mingw73_64
-  - set PYTHONPATH = C:\Python37-x64
   - set PATH=%QTDIR%\bin;C:\MinGW\bin;%PYTHON%\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
   - "python --version"
   #- "ECHO %PYTHON%"
@@ -15,8 +14,8 @@ install:
   #- dir
   #- cd C:\MinGW\bin\
   #- dir
+  - dir C:\Python37-x64\
   
 build_script:
   - qmake Test_Python.pro -spec win32-g++ "CONFIG+=release"
   - mingw32-make
-  - mingw32-make in build-Test_Python-qt-Release
