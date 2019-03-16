@@ -1,12 +1,14 @@
 environment:
   PYTHON: C:\Python37-x64
 
+
 install:
   - set QTDIR=C:\Qt\5.12.1\mingw73_64
   - set PYTHONPATH = C:\Python37-x64
   - set PATH=%QTDIR%\bin;C:\MinGW\bin;%PYTHON%\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
   - "python --version"
-  
+  - "ECHO %PYTHON%"
+  - pip install python-dev
   
 build_script:
   - qmake Test_Python.pro
