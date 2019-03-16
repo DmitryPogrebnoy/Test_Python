@@ -19,3 +19,4 @@ install:
 build_script:
   - qmake Test_Python.pro -spec win32-g++ "CONFIG+=release"
   - mingw32-make
+  - mingw32-make in build-Test_Python-qt-Release
