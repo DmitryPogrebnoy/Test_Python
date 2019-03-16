@@ -1,5 +1,4 @@
-
-matrix:
+environment:
   - PYTHON: "C:\\Python37-x64"
 
 install:
