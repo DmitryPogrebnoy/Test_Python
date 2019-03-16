@@ -10,7 +10,8 @@ install:
   #- python -m pip install --upgrade pip
   #- pip install numpy
   - dir C:\Python37-x64\
+
   
 build_script:
-  - qmake Test_Python.pro
+  - qmake.exe Test_Python.pro -spec win32-g++ "CONFIG+=release"
   - mingw32-make
