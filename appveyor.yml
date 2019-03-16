@@ -7,9 +7,12 @@ install:
   - set PYTHONPATH = C:\Python37-x64
   - set PATH=%QTDIR%\bin;C:\MinGW\bin;%PYTHON%\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
   - "python --version"
-  - "ECHO %PYTHON%"
-  - python -m pip install --upgrade pip
-  - pip install numpy
+  #- "ECHO %PYTHON%"
+  #- python -m pip install --upgrade pip
+  #- pip install numpy
+  - cd %PYTHON%\include
+  - dir
+  - cd C:\
   
 build_script:
   - qmake Test_Python.pro
