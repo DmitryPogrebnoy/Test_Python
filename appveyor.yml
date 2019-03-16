@@ -10,6 +10,8 @@ install:
   - "ECHO %PYTHON%"
   - python -m pip install --upgrade pip
   - pip install numpy
+  - cd C:\Python37-x64\include
+  - dir Python.h
   
 build_script:
   - qmake Test_Python.pro
