@@ -1,6 +1,6 @@
 image: Visual Studio 2017
 
-clone_folder: c:\projects\Test_Python 
+clone_folder: C:\projects\Test_Python 
 shallow_clone: true
 
 environment:
@@ -9,6 +9,7 @@ environment:
 install:
   - set QTDIR=C:\Qt\5.12.1\mingw73_64
   - set PATH=%PATH%;%QTDIR%\bin;C:\MinGW\bin
+  - set PYTHONPATH = %PYTHON%
   
 build_script:
   - qmake Test_Python.pro
