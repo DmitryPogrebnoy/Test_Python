@@ -1,5 +1,5 @@
 environment:
-  - PYTHON: "C:\\Python37-x64"
+  PYTHON: C:\Python37-x64
 
 install:
   - set QTDIR=C:\Qt\5.12.1\mingw73_64
