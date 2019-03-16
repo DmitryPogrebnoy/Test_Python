@@ -28,13 +28,9 @@ DISTFILES +=
 HEADERS += \
     pyhelper.h
 
-PYTHONPATH =$$PWD/../../AppData/Local/Programs/Python/Python37
+win32:CONFIG(release, debug|release): LIBS += -L$$(PYTHONPATH)/libs/ -lpython3
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$(PYTHONPATH)/libs/ -lpython3d
+else:unix: LIBS += -L$$(PYTHONPATH)/libs/ -lpython3
 
-
-
-win32:CONFIG(release, debug|release): LIBS += -L$${PYTHONPATH}/libs/ -lpython3
-else:win32:CONFIG(debug, debug|release): LIBS += -L$${PYTHONPATH}/libs/ -lpython3d
-else:unix: LIBS += -L$${PYTHONPATH}/libs/ -lpython3
-
-INCLUDEPATH += $${PYTHONPATH}/include
-DEPENDPATH += $${PYTHONPATH}/include
+INCLUDEPATH += $$(PYTHONPATH)/include
+DEPENDPATH += $$(PYTHONPATH)/include
