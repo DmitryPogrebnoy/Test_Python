@@ -28,6 +28,7 @@ DISTFILES +=
 HEADERS += \
     pyhelper.h
 
+message($$(PYTHONPATH))
 win32:CONFIG(release, debug|release): LIBS += -L$$(PYTHONPATH)/libs/ -lpython3
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$(PYTHONPATH)/libs/ -lpython3d
 else:unix: LIBS += -L$$(PYTHONPATH)/libs/ -lpython3
