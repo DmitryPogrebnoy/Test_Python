@@ -10,9 +10,11 @@ install:
   #- "ECHO %PYTHON%"
   #- python -m pip install --upgrade pip
   #- pip install numpy
+  - dir
   - cd %PYTHON%\include
   - dir
-  - cd C:\
+  - cd C:\MinGW\bin\
+  - dir
   
 build_script:
   - qmake Test_Python.pro
