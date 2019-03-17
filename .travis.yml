@@ -10,12 +10,13 @@ python:
 before_install:
  #- apt-get install python3.6
  #- sudo apt-get install python3-dev
+ - pip list
  - sudo apt-get install g++-mingw-w64-i686
  - which python
- - dir /opt/pyenv/shims/python
+ - echo $PYTHONHOME
  - echo $PYTHONPATH
- - export PYTHON=$PYTHONPATH;
- - echo $PYTHON
+ #- export PYTHON=$PYTHONPATH;
+ #- echo $PYTHON
  - sudo apt install qt5-default
 
 script:
