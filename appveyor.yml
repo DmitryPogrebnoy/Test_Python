@@ -1,4 +1,4 @@
-clone_folder: C:\test_python
+clone_folder: C:\Test_Python
 shallow_clone: true
 
 environment:
@@ -13,7 +13,7 @@ environment:
       MinGW: C:\mingw-w64\x86_64-7.3.0-posix-seh-rt_v5-rev0\mingw64\bin;
 
 install:
-  - set PATH=%QTDIR%\bin;%MinGW%;%PYTHON%\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - set PATH=%QTDIR%\bin;%MinGW%;%PYTHON%\Scripts;%PYTHON%;%PATH%
 
 build_script:
   - qmake.exe Test_Python.pro
