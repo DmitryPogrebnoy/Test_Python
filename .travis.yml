@@ -14,7 +14,7 @@ before_install:
  #- pip install --upgrade pip
  #- python3 -V
  #- pip3 -V
- - locate python3.6
+ - dir /home/travis/virtualenv/python3.6.3
  - sudo apt-get install g++-mingw-w64-i686
  #- which python
  - echo $PYTHONPATH:$(pwd)
