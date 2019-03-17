@@ -4,10 +4,6 @@ os: linux
 compiler:
   - g++
 
-
-env:
- - PYTHON = python3.6
-
 before_install:
  - sudo apt update
  #- apt-get install python3.6
