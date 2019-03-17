@@ -1,16 +1,16 @@
 environment:
-  PYTHON: C:\Python37-x64
+  PYTHON: C:\Python37
 
 
 install:
   - set QTDIR=C:\Qt\5.12.1\mingw73_64
-  - dir C:\Qt\5.10.1\
+  #- dir C:\Qt\5.12.1\
   - set PATH=%QTDIR%\bin;C:\MinGW\bin;%PYTHON%\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
   #- "python --version"
   #- "ECHO %PYTHON%"
   #- python -m pip install --upgrade pip
   #- pip install numpy
-  - dir C:\Python37-x64\libs
+  #- dir C:\Python37-x64\libs
 
   
 build_script:
