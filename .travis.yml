@@ -6,6 +6,8 @@ compiler:
   
 python:
  - 3.6
+virtualenv : 
+  system_site_packages :  true
 
 before_install:
  #- apt-get install python3.6
