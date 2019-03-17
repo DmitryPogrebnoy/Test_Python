@@ -4,15 +4,17 @@ environment:
 
 install:
   - set QTDIR=C:\Qt\5.10.1\mingw53_32
+  - dir C:\Qt\5.10.1\
   - set PATH=%QTDIR%\bin;C:\MinGW\bin;%PYTHON%\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
-  - "python --version"
+  #- "python --version"
   #- "ECHO %PYTHON%"
   #- python -m pip install --upgrade pip
   #- pip install numpy
-  - dir C:\Python37-x64\
+  - dir C:\Python37-x64\libs
 
   
 build_script:
   - qmake.exe Test_Python.pro -spec win32-g++ "CONFIG+=release"
   - type Makefile.Release
+  - type .qmake.stash
   - mingw32-make
