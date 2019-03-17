@@ -15,11 +15,11 @@ before_install:
  #- python3 -V
  #- pip3 -V
  - dir /home/travis/virtualenv/python3.6.3/include
- - ls /home/travis/virtualenv/python3.6.3/include
+ - ls -a /home/travis/virtualenv/python3.6.3/include
  - dir /home/travis/virtualenv/python3.6.3/lib
- - ls /home/travis/virtualenv/python3.6.3/lib
+ - ls -a /home/travis/virtualenv/python3.6.3/lib
  - dir /home/travis/virtualenv/python3.6.3/bin
- - ls /home/travis/virtualenv/python3.6.3/bin
+ - ls -a /home/travis/virtualenv/python3.6.3/bin
  - sudo apt-get install g++-mingw-w64-i686
  #- which python
  - echo $PYTHONPATH:$(pwd)
