@@ -9,6 +9,7 @@ install:
   #- "ECHO %PYTHON%"
   #- python -m pip install --upgrade pip
   #- pip install numpy
+  - type Makefile.Release
   - dir C:\Python37-x64\
 
   
