@@ -1,5 +1,5 @@
 environment:
-  PYTHON: C:\Python37
+  PYTHON: C:\Python37-x64
 
 
 install:
@@ -14,7 +14,7 @@ install:
 
   
 build_script:
-  - qmake.exe Test_Python.pro -spec win32-g++ "CONFIG+=release"
+  - qmake.exe Test_Python.pro -spec win64-g++ "CONFIG+=release"
   - type Makefile.Release
   - type .qmake.stash
   - mingw32-make
