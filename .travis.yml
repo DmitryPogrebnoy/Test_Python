@@ -1,0 +1,21 @@
+dist: xenial
+language: cpp
+os: linux
+compiler:
+  - g++
+
+python:
+ - 3.7
+
+env:
+ - PYTHON = 
+
+before_install:
+ - sudo apt update
+ - sudo apt-get install g++-mingw-w64
+ - sudo apt-get install g++-mingw-m32
+ - sudo apt install qt5-default
+
+script:
+ - qmake Test_Python.pro
+ - make
