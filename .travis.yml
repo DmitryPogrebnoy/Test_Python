@@ -14,7 +14,9 @@ before_install:
  #- pip install --upgrade pip
  #- python3 -V
  #- pip3 -V
- - dir /home/travis/virtualenv/python3.6.3
+ - dir /home/travis/virtualenv/python3.6.3/include
+ - dir /home/travis/virtualenv/python3.6.3/lib
+ - dir /home/travis/virtualenv/python3.6.3/bin
  - sudo apt-get install g++-mingw-w64-i686
  #- which python
  - echo $PYTHONPATH:$(pwd)
@@ -23,7 +25,6 @@ before_install:
  #- export PYTHON=$PYTHONPATH;
  #- echo $PYTHON
  - sudo apt install qt5-default
- - - ./.ci/travis/install.sh
 #
 
 script:
