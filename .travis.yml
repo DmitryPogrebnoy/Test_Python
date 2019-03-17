@@ -1,4 +1,4 @@
-dist: xenial
+dist: trusty
 language: c++
 os: linux
 compiler: 
@@ -10,12 +10,13 @@ python:
 before_install:
  #- apt-get install python3.6
  #- sudo apt-get install python3-dev
- - sudo apt-get -y install python3-pip python3-dev
- - pip install --upgrade pip
- - python3 -V
- - pip3 -V
+ #- sudo apt-get -y install python3-pip python3-dev
+ #- pip install --upgrade pip
+ #- python3 -V
+ #- pip3 -V
  - sudo apt-get install g++-mingw-w64-i686
- - which python
+ #- which python
+ - echo $PYTHONPATH:$(pwd)
  - echo $PYTHONHOME
  - echo $PYTHONPATH
  #- export PYTHON=$PYTHONPATH;
