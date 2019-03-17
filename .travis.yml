@@ -6,8 +6,7 @@ compiler:
 
 
 env:
- - echo $PATH
- - PYTHON = which python
+ - PYTHON = python3.6
 
 before_install:
  - sudo apt update
