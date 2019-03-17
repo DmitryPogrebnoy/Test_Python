@@ -8,12 +8,12 @@ python:
  - 3.7
 
 env:
- - PYTHON = 
+ - PYTHON =. 
 
 before_install:
  - sudo apt update
  - sudo apt-get install g++-mingw-w64-i686
- - sudo apt-get install g++-mingw-w64-x86-64
+ #- sudo apt-get install g++-mingw-w64-x86-64
  - sudo apt install qt5-default
 
 script:
