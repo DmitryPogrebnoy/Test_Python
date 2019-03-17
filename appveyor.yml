@@ -9,10 +9,10 @@ install:
   #- "ECHO %PYTHON%"
   #- python -m pip install --upgrade pip
   #- pip install numpy
-  - type Makefile.Release
   - dir C:\Python37-x64\
 
   
 build_script:
   - qmake.exe Test_Python.pro -spec win32-g++ "CONFIG+=release"
+  - type Makefile.Release
   - mingw32-make
