@@ -6,6 +6,7 @@ install:
   - set QTDIR=C:\Qt\5.12.1\mingw73_64
   #- dir C:\Qt\5.12.1\
   - set PATH=%QTDIR%\bin;C:\mingw-w64\x86_64-7.3.0-posix-seh-rt_v5-rev0\bin;%PYTHON%\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - dir C:\mingw-w64\x86_64-7.3.0-posix-seh-rt_v5-rev0
   #- "python --version"
   #- "ECHO %PYTHON%"
   #- python -m pip install --upgrade pip
