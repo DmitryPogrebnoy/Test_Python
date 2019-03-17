@@ -1,20 +1,17 @@
 environment:
-  PYTHON: C:\Python37
-
+  matrix:
+    - bit: 32
+      QTDIR: C:\Qt\5.11.3\mingw53_32
+      PYTHON: C:\Python37
+      MinGW: C:\MinGW\bin
+    - bit: 64
+      QTDIR: C:\Qt\5.12.1\mingw73_64
+      PYTHON: C:\Python37-x64
+      MinGW: C:\mingw-w64\x86_64-7.3.0-posix-seh-rt_v5-rev0
 
 install:
-  - set QTDIR=C:\Qt\5.10.1\mingw53_32
-  #- dir C:\Qt\5.12.1\
-  - set PATH=%QTDIR%\bin;C:\MinGW\bin;%PYTHON%\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
-  #- "python --version"
-  #- "ECHO %PYTHON%"
-  #- python -m pip install --upgrade pip
-  #- pip install numpy
-  #- dir C:\Python37-x64\libs
+  - set PATH=%QTDIR%\bin;%MinGW%;%PYTHON%\Scripts;%PYTHON%;%PYTHON%\\Scripts;%PATH%
 
-  
 build_script:
   - qmake.exe Test_Python.pro
-  #- type Makefile.Release
-  #- type .qmake.stash
   - mingw32-make
