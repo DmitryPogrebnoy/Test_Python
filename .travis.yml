@@ -20,7 +20,7 @@ before_install:
  #- export PYTHON=$PYTHONPATH;
  #- echo $PYTHON
  - sudo apt install qt5-default
-
+#
 
 script:
  - qmake Test_Python.pro
