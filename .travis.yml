@@ -1,7 +1,8 @@
 dist: xenial
 language: c++
 os: linux
- compiler: g++
+compiler: 
+ - g++
   
 python:
  - 3.6
