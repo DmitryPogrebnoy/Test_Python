@@ -4,13 +4,9 @@ os: linux
 compiler:
   - g++
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
 
 python:
- - 3.7
+ - 3.6
 
 before_install:
  #- apt-get install python3.6
@@ -27,8 +23,6 @@ before_install:
  #- echo $PYTHON
  - sudo apt install qt5-default
 
-install:
- - sudo pip3 install -r requirements.txt
 
 script:
  - qmake Test_Python.pro
