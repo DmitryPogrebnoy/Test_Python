@@ -21,19 +21,20 @@ addons:
 
 before_install:
  #- sudo apt-get -y install python3-pip python3-dev
- -echo $(pyenv root)
- - python3 -V
+ - dir $HOME/virtualenv/
+ - echo $(pyenv root)
+ #- python3 -V
  #- pip3 -V
  - dir /home
  - dir /
  - dir $HOME
- - sudo apt-get install g++-mingw-w64-i686
  #- which python
  - echo $PYTHONPATH:$(pwd)
  - echo $PYTHONHOME
  - echo $PYTHONPATH
  #- export PYTHON=$PYTHONPATH
  #- echo $PYTHON
+ - sudo apt-get install g++-mingw-w64-i686
  - sudo apt install qt5-default
 #
 
