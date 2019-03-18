@@ -28,10 +28,11 @@ DISTFILES +=
 HEADERS += \
     pyhelper.h
 
-message($$(PYTHON))
-win32:CONFIG(release, debug|release): LIBS += -L$$(PYTHON)/libs/ -lpython3
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$(PYTHON)/libs/ -lpython3d
-else:unix: LIBS += -L$$(PYTHON)/libs/ -lpython3
+message($$(PYTHONLIB))
+message($$(PYTHONINCLUDE))
+win32:CONFIG(release, debug|release): LIBS += -L$$(PYTHONLIB)/ -lpython3
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$(PYTHONLIB)/ -lpython3d
+else:unix: LIBS += -L$$(PYTHONLIB)/libs/ -lpython3
 
-INCLUDEPATH += $$(PYTHON)/include
-DEPENDPATH += $$(PYTHON)/include
+INCLUDEPATH += $$(PYTHONINCLUDE)
+DEPENDPATH += $$(PYTHONINCLUDE)
