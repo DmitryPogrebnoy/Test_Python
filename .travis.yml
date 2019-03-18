@@ -33,7 +33,9 @@ before_install:
  - dir /opt/python/
  - dir /opt/python/3.7
  - dir /opt/python/3.7/lib/
+ - dir /opt/python/3.7/lib/pkgconfig
  - dir /opt/python/3.7/lib/python3.7
+ - dir /opt/python/3.7/lib/python3.7/config-3.7m-x86_64-linux-gnu 
  - dir /opt/python/3.7/include
  - dir /opt/python/3.7/include/python3.7m
  #
