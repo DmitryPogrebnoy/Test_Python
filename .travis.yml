@@ -4,19 +4,19 @@ os: linux
 compiler: 
  - g++
 
-python:
- - "3"
+#python:
+# - "3"
 
 env:
   global:
     - PYTHONLIB=/opt/python/3.7/lib/
     - PYTHONINCLUDE=/opt/python/3.7/include/python3.7m/
 
-addons:
-  apt:
-    packages:
-     - python3-dev
-     - python3
+#addons:
+ # apt:
+ #   packages:
+  #   - python3-dev
+  #   - python3
 
 before_install:
  #- sudo apt-get -y install python3-pip python3-dev
@@ -27,22 +27,10 @@ before_install:
  #- dir $(pyenv root)/
  #- python3 -V
  #- pip3 -V
- - dir /usr/bin
- - dir /usr/bin/python3.5
- - dir /usr/bin/python3
- - dir /home
- - dir /opt/python/
- - dir /opt/python/3.7
- - dir /opt/python/3.7/lib/
- - dir /opt/python/3.7/lib/pkgconfig
- - dir /opt/python/3.7/lib/python3.7
- - dir /opt/python/3.7/lib/python3.7/config-3.7m-x86_64-linux-gnu 
- - dir /opt/python/3.7/include
- - dir /opt/python/3.7/include/python3.7m
- #
  - dir /opt/python/3.7.1
  - dir /opt/python/3.7.1/lib
- - dir /opt/python/3.7.1/include
+ - dir /opt/python/3.7.1/lib/python3.7
+ - dir /opt/python/3.7.1/include/python3.7m
  - dir $HOME
  #- which python
  - echo $PYTHONPATH:$(pwd)
