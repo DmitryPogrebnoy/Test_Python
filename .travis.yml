@@ -30,8 +30,7 @@ before_install:
  #- pip3 -V
  - dir /home
  - dir /
- - dir /opt/pyenv
- - dir /opt/python
+ - dir /opt/python/3.7.1
  - dir /usr
  - dir /usr/include/python3.5
  - dir /usr/include/python3.5m
