@@ -5,15 +5,17 @@ environment:
   matrix:
     - bit: 32
       QTDIR: C:\Qt\5.11.3\mingw53_32
-      PYTHON: C:\Python37
+      PYTHONLIB: C:\Python37\libs
+      PYTHONINCLUDE: C:\Python37\include
       MinGW: C:\MinGW\bin
     - bit: 64
       QTDIR: C:\Qt\5.12.1\mingw73_64
-      PYTHON: C:\Python37-x64
+      PYTHONLIB: C:\Python37-x64\libs
+      PYTHONINCLUDE: C:\Python37-x64\include
       MinGW: C:\mingw-w64\x86_64-7.3.0-posix-seh-rt_v5-rev0\mingw64\bin;
 
 install:
-  - set PATH=%QTDIR%\bin;%MinGW%;%PYTHON%\Scripts;%PYTHON%;%PATH%
+  - set PATH=%QTDIR%\bin;%MinGW%;%PATH%
 
 build_script:
   - qmake.exe Test_Python.pro
