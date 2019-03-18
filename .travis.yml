@@ -21,7 +21,8 @@ addons:
 
 before_install:
  #- sudo apt-get -y install python3-pip python3-dev
- - python3.6.1 -V
+ -echo $(pyenv root)
+ - python3 -V
  #- pip3 -V
  - dir /home
  - dir /
