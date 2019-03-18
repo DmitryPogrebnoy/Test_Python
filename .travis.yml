@@ -22,12 +22,15 @@ addons:
 before_install:
  #- sudo apt-get -y install python3-pip python3-dev
  - dir $HOME/virtualenv/python3.6
+ - dir $HOME/virtualenv/python3.6/include
+ - dir $HOME/virtualenv/python3.6/lib
  - dir $HOME/virtualenv/python3.6/bin
  - dir $(pyenv root)/
  #- python3 -V
  #- pip3 -V
  - dir /home
  - dir /
+ - dir /usr
  - dir $HOME
  #- which python
  - echo $PYTHONPATH:$(pwd)
