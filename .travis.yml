@@ -7,12 +7,10 @@ compiler:
 python:
  - "3"
 
-#virtualenv : 
-  #system_site_packages :  true
-
-#env:
-  #global:
-   # - PYTHONPATH="/home/travis/build/DmitryPogrebnoy/Test_Python"
+env:
+  global:
+    - PYTHONLIB=/opt/python/3.7/lib/
+    - PYTHONINCLUDE=/opt/python/3.7/include/python3.7m/
 
 addons:
   apt:
