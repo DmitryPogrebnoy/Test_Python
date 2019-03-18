@@ -28,7 +28,8 @@ before_install:
  #- python3 -V
  #- pip3 -V
  - dir /usr/bin
- - dir /usr/bin/ld
+ - dir /usr/bin/python3.5
+ - dir /usr/bin/python3
  - dir /home
  - dir /opt/python/
  - dir /opt/python/3.7
