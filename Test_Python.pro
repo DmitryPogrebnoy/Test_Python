@@ -32,7 +32,7 @@ message($$(PYTHONLIB))
 message($$(PYTHONINCLUDE))
 win32:CONFIG(release, debug|release): LIBS += -L$$(PYTHONLIB)/ -lpython37
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$(PYTHONLIB)/ -lpython37d
-else:unix: LIBS += -L$$(PYTHONLIB)/libs/ -lpython37
+else:unix: LIBS += -L$$(PYTHONLIB)/ -lpython3.7m
 
 INCLUDEPATH += $$(PYTHONINCLUDE)
 DEPENDPATH += $$(PYTHONINCLUDE)
