@@ -4,42 +4,23 @@ os: linux
 compiler: 
  - g++
 
-#python:
-# - "3"
 
 env:
   global:
     - PYTHONLIB=/opt/python/3.7/lib/
     - PYTHONINCLUDE=/opt/python/3.7/include/python3.7m/
 
-#addons:
- # apt:
- #   packages:
-  #   - python3-dev
-  #   - python3
 
 before_install:
- #- sudo apt-get -y install python3-pip python3-dev
- #- dir $HOME/virtualenv/python3.7.1
- #- dir $HOME/virtualenv/python3.7.1/include/python3.7m
- #- dir $HOME/virtualenv/python3.7.1/lib/python3.7/site-packages
- #- dir $HOME/virtualenv/python3.7.1/lib/python3.7/importlib
- #- dir $(pyenv root)/
- #- python3 -V
- #- pip3 -V
  - dir /opt/python/3.7
  - dir /opt/python/3.7/lib
  - dir /opt/python/3.7/lib/python3.7
  - dir /opt/python/3.7/include/python3.7m
  - dir $HOME
- #- which python
- - echo $PYTHONPATH:$(pwd)
- - echo $PYTHONHOME
- - echo $PYTHONPATH
  #- export PYTHON=$PYTHONPATH
  #- echo $PYTHON
  #- sudo apt-get install g++-mingw-w64-i686
- #- sudo apt install qt5-default
+ - sudo apt-get install qt5-default
 
 
 script:
