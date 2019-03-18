@@ -3,18 +3,26 @@ language: c++
 os: linux
 compiler: 
  - g++
-  
-virtualenv : 
-  system_site_packages :  true
 
-env:
-  global:
-    - PYTHONPATH="/home/travis/build/DmitryPogrebnoy/Test_Python"
+python:
+ - 3.6.1
+
+#virtualenv : 
+  #system_site_packages :  true
+
+#env:
+  #global:
+   # - PYTHONPATH="/home/travis/build/DmitryPogrebnoy/Test_Python"
+
+addons:
+  apt:
+    packages:
+     - python3-dev
 
 before_install:
- - sudo apt-get -y install python3-pip python3-dev
+ #- sudo apt-get -y install python3-pip python3-dev
  - python3 -V
- - pip3 -V
+ #- pip3 -V
  - dir $HOME
  - sudo apt-get install g++-mingw-w64-i686
  #- which python
