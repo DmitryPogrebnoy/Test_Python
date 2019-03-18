@@ -39,7 +39,7 @@ before_install:
  #- export PYTHON=$PYTHONPATH
  #- echo $PYTHON
  #- sudo apt-get install g++-mingw-w64-i686
- - sudo apt install qt5-default
+ #- sudo apt install qt5-default
 
 
 script:
