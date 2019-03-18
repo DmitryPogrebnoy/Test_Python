@@ -23,15 +23,18 @@ before_install:
  #- sudo apt-get -y install python3-pip python3-dev
  - dir $HOME/virtualenv/python3.7.1
  - dir $HOME/virtualenv/python3.7.1/include/python3.7m
- - dir $HOME/virtualenv/python3.7.1/lib/python3.7
+ - dir $HOME/virtualenv/python3.7.1/lib/python3.7/site-packages
+ - dir $HOME/virtualenv/python3.7.1/lib/python3.7/importlib
  #- dir $(pyenv root)/
  #- python3 -V
  #- pip3 -V
  - dir /home
  - dir /
  - dir /usr
- - dir /usr/include
- - dir /usr/lib
+ - dir /usr/include/python3.5
+ - dir /usr/include/python3.5m
+ - dir /usr/lib/python3
+ - dir /usr/lib/python3.5
  - dir $HOME
  #- which python
  - echo $PYTHONPATH:$(pwd)
