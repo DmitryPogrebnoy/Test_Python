@@ -1,11 +1,11 @@
-dist: trusty
+dist: xenial
 language: c++
 os: linux
 compiler: 
  - g++
 
 python:
- - 3.6.1
+ - "3.7.1"
 
 #virtualenv : 
   #system_site_packages :  true
@@ -21,11 +21,11 @@ addons:
 
 before_install:
  #- sudo apt-get -y install python3-pip python3-dev
- - dir $HOME/virtualenv/python3.6
- - dir $HOME/virtualenv/python3.6/include
- - dir $HOME/virtualenv/python3.6/lib
- - dir $HOME/virtualenv/python3.6/bin
- - dir $(pyenv root)/
+ - dir $HOME/virtualenv/
+ #- dir $HOME/virtualenv/python3.6/include
+ #- dir $HOME/virtualenv/python3.6/lib
+ #- dir $HOME/virtualenv/python3.6/bin
+ #- dir $(pyenv root)/
  #- python3 -V
  #- pip3 -V
  - dir /home
