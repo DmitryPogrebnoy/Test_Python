@@ -27,6 +27,8 @@ before_install:
  #- dir $(pyenv root)/
  #- python3 -V
  #- pip3 -V
+ - dir /usr/bin
+ - dir /usr/bin/ld
  - dir /home
  - dir /opt/python/
  - dir /opt/python/3.7
