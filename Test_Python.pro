@@ -1,7 +1,6 @@
-
 QT -= gui
 
-CONFIG += c++14 console
+CONFIG += c++11 console
 CONFIG -= app_bundle
 
 # The following define makes your compiler emit warnings if you use
@@ -9,11 +8,6 @@ CONFIG -= app_bundle
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
-
-# You can also make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
         main.cpp
@@ -26,7 +20,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES +=
 
 HEADERS += \
-    pyhelper.h
+    pyexception.hpp \
+
 
 message($$(PYTHONLIB))
 message($$(PYTHONINCLUDE))
@@ -36,3 +31,20 @@ else:unix: LIBS += -L$$(PYTHONLIB)/ -lpython3.7m
 
 INCLUDEPATH += $$(PYTHONINCLUDE)
 DEPENDPATH += $$(PYTHONINCLUDE)
+
+#Бага Qt креатора:  редактор не отображает, что подключена библиотека
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../AppData/Local/Programs/Python/Python37/libs/ -lpython37
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../AppData/Local/Programs/Python/Python37/libs/ -lpython37d
+#else:unix: LIBS += -L$$PWD/../../AppData/Local/Programs/Python/Python37/libs/ -lpython37
+
+#INCLUDEPATH += $$PWD/../../AppData/Local/Programs/Python/Python37/include
+#DEPENDPATH += $$PWD/../../AppData/Local/Programs/Python/Python37/include
+
+message($$(NUMPYLIB))
+message($$(NUMPYINCLUDE))
+win32:CONFIG(release, debug|release): LIBS += -L$$(NUMPYLIB)/ -lnpymath
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$(NUMPYLIB)/ -lnpymathd
+else:unix:!macx: LIBS += -L$$(NUMPYLIB)/ -lnpymath
+
+INCLUDEPATH += $$(NUMPYINCLUDE)
+DEPENDPATH += $$(NUMPYINCLUDE)

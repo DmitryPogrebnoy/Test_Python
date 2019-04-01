@@ -8,11 +8,14 @@ env:
   global:
     - PYTHONLIB=/opt/python/3.7/lib/
     - PYTHONINCLUDE=/opt/python/3.7/include/python3.7m/
+    - NUMPYLIB=/usr/lib/python3/dist-packages/numpy/core/lib
+    - NUMPYINCLUDE=/usr/lib/python3/dist-packages/numpy/core/include/numpy
 
 before_install:
+ - sudo apt-get update
  - sudo apt-get install qt5-default
-
-
+ - sudo apt-get install python3-numpy
+ 
 script:
  - qmake Test_Python.pro
  - make

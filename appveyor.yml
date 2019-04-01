@@ -5,18 +5,28 @@ environment:
   matrix:
     - bit: 32
       QTDIR: C:\Qt\5.11.3\mingw53_32
+      PYTHON: C:\Python37
       PYTHONLIB: C:\Python37\libs
       PYTHONINCLUDE: C:\Python37\include
+      NUMPYLIB: C:\Python37\Lib\site-packages\numpy\core\lib
+      NUMPYINCLUDE: C:\Python37\Lib\site-packages\numpy\core\include\numpy
       MinGW: C:\MinGW\bin
     - bit: 64
       QTDIR: C:\Qt\5.12.1\mingw73_64
+      PYTHON: C:\Python37-x64
       PYTHONLIB: C:\Python37-x64\libs
       PYTHONINCLUDE: C:\Python37-x64\include
-      MinGW: C:\mingw-w64\x86_64-7.3.0-posix-seh-rt_v5-rev0\mingw64\bin;
+      NUMPYLIB: C:\Python37-x64\Lib\site-packages\numpy\core\lib
+      NUMPYINCLUDE: C:\Python37-x64\Lib\site-packages\numpy\core\include\numpy
+      MinGW: C:\mingw-w64\x86_64-7.3.0-posix-seh-rt_v5-rev0\mingw64\bin
 
 install:
   - set PATH=%QTDIR%\bin;%MinGW%;%PATH%
-
+  - cd %PYTHON%
+  - python -m pip install --upgrade pip
+  - python -m pip install numpy
+  - cd C:\Test_Python
+  
 build_script:
   - qmake Test_Python.pro
   - mingw32-make
