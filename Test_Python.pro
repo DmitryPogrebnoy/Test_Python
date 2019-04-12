@@ -21,10 +21,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES +=
 
 HEADERS += \
-    pyException.hpp \
     pyMainAlgWorker.hpp \
     pyScopedPointerDeleter.hpp \
-    pyRunner.hpp
+    pyRunner.hpp \
+    pyExcept.hpp
 
 
 message($$(PYTHONLIB))

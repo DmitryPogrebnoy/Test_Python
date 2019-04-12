@@ -26,7 +26,7 @@
 
 #include <iostream>
 
-#include "pyException.hpp"
+#include "pyExcept.hpp"
 #include "pyScopedPointerDeleter.hpp"
 
 using namespace std;
