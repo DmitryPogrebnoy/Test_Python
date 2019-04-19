@@ -58,9 +58,7 @@ int main(int argc, char *argv[])
     }
     delete [] arguments;
 
-    //Падает при попытке выключить, без выключения все работает ок
-    //Надо будет разобраться
-    //pyRunner.stop_signal();
+    pyRunner.stop_signal();
 
     cout<<"Ok"<<endl;
 

@@ -36,15 +36,24 @@ public:
 class MethodNotFoundException: public Exception
 {
 public:
-    MethodNotFoundException(const string &moduleName, const string &methodName)
+    explicit MethodNotFoundException(const string &moduleName, const string &methodName)
         : Exception("Could not found method '" + methodName + "' in Python module '" + moduleName + "'.")
     {}
 };
 
+class CreateTupleException: public Exception
+{
+public:
+    explicit CreateTupleException(const int lengthTuple)
+        : Exception("Failed to create a tuple of length " + to_string(lengthTuple) +".")
+    {}
+};
+
+
 class CallMethodException: public Exception
 {
 public:
-    CallMethodException(const string &moduleName, const string &methodName)
+    explicit CallMethodException(const string &moduleName, const string &methodName)
         : Exception("An error occurred while calling the method '" + methodName + "' in the module '" + moduleName + "'.")
     {}
 };
@@ -52,7 +61,7 @@ public:
 class NotArrayException: public Exception
 {
 public:
-    NotArrayException(const string &arrayName)
+    explicit NotArrayException(const string &arrayName)
         : Exception("'" + arrayName + "' is not an array")
     {}
 };
@@ -60,7 +69,7 @@ public:
 class WrongSizeArrayException: public Exception
 {
 public:
-    WrongSizeArrayException(const string &arrayName, const int &expectedValue, const int &currentValue)
+    explicit WrongSizeArrayException(const string &arrayName, const int &expectedValue, const int &currentValue)
         : Exception("'" + arrayName + "' array has the wrong size. Expected value: "
                     + to_string(expectedValue) + ". Current value: " + to_string(currentValue) + ".")
     {}
@@ -69,7 +78,7 @@ public:
 class WrongDimArrayException: public Exception
 {
 public:
-    WrongDimArrayException(const string &arrayName, const int &expectedValue, const int &currentValue)
+    explicit WrongDimArrayException(const string &arrayName, const int &expectedValue, const int &currentValue)
         : Exception("'" + arrayName + "' array has the wrong dimension. Expected value: "
                     + to_string(expectedValue) + ". Current value: " + to_string(currentValue) + ".")
     {}
@@ -78,7 +87,7 @@ public:
 class NotTupleException: public Exception
 {
 public:
-    NotTupleException(const string &tupleName)
+    explicit NotTupleException(const string &tupleName)
         : Exception("'" + tupleName + "' is not a tuple")
     {}
 };
@@ -86,7 +95,7 @@ public:
 class WrongSizeTupleException: public Exception
 {
 public:
-    WrongSizeTupleException(const string &tupleName, const int &expectedValue, const int &currentValue)
+    explicit WrongSizeTupleException(const string &tupleName, const int &expectedValue, const int &currentValue)
         : Exception("'" + tupleName + "' tuple has the wrong size. Expected value: " + to_string(expectedValue)
                     + ". Current value: " + to_string(currentValue) + ".")
     {}
@@ -95,7 +104,7 @@ public:
 class CouldNotSetItemTupleException: public Exception
 {
 public:
-    CouldNotSetItemTupleException(const string &tupleName, const int &itemNumber, const string &valueName)
+    explicit CouldNotSetItemTupleException(const string &tupleName, const int &itemNumber, const string &valueName)
         : Exception("Could not set '" + valueName + "' value as item " + to_string(itemNumber) + " of '" + tupleName + "' tuple.")
     {}
 };
