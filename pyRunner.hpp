@@ -13,14 +13,14 @@ public:
         emit run(arguments);
     }
     void start_signal(const char* name){
-        emit start(name);
+        emit startPython(name);
     }
     void stop_signal(){
-        emit stop();
+        emit stopPython();
     }
 signals:
-    void start(const char*);
-    void stop();
+    void startPython(const char*);
+    void stopPython();
     void run(double**);
 };
 

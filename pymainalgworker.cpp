@@ -25,6 +25,7 @@
 //#include <QScopedPointer>
 
 #include <iostream>
+#include <fstream>
 
 #include "pyExcept.hpp"
 #include "pyScopedPointerDeleter.hpp"
@@ -32,35 +33,37 @@
 using namespace std;
 
 
-PyMainAlgWorker::PyMainAlgWorker(){}
+PyMainAlgWorker::PyMainAlgWorker(){
+    cout << "pyMainAlg worker start" << endl;
+}
 
 PyMainAlgWorker::~PyMainAlgWorker(){}
 
 void PyMainAlgWorker::run(double** arguments)
 {
     try{
-        //Set sys.argv[0] = "main_python_script"
+        //Set sys.argv[0] = config.namePyMainScript
         wchar_t* py_argv_init[1];
         QScopedArrayPointer<wchar_t*,ScopedSingleElemArrayPointerPy_DecodeLocaleDeleter> py_argv(py_argv_init);
-        py_argv[0] = Py_DecodeLocale("main_python_script", nullptr);
+        py_argv[0] = Py_DecodeLocale(config.get_namePyMainScript().c_str(), nullptr);
         if(py_argv.isNull()){
-            throw DecodeException("main_python_script");
+            throw DecodeException(config.get_namePyMainScript());
         }
         PySys_SetArgv(1, py_argv.data());
 
-        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_NameModule(PyUnicode_DecodeFSDefault("main_python_script"));
+        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_NameModule(PyUnicode_DecodeFSDefault(config.get_namePyMainScript().c_str()));
         if (py_NameModule.isNull()) {
-            throw DecodeException("main_python_script");
+            throw DecodeException(config.get_namePyMainScript());
         }
 
         QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_Module(PyImport_Import(py_NameModule.data()));
         if (py_Module.isNull()) {
-            throw ModuleNotFoundException("main_python_script");
+            throw ModuleNotFoundException(config.get_namePyMainScript());
         }
 
-        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_Method(PyObject_GetAttrString(py_Module.data(), "main"));
+        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_Method(PyObject_GetAttrString(py_Module.data(), config.get_namePyMainMethod().c_str()));
         if (py_Method.isNull() || !PyCallable_Check(py_Method.data())) {
-            throw MethodNotFoundException("main_python_script","main");
+            throw MethodNotFoundException(config.get_namePyMainScript(),config.get_namePyMainMethod());
         }
 
         QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_Args(PyTuple_New(4));
@@ -72,7 +75,7 @@ void PyMainAlgWorker::run(double** arguments)
         npy_intp dims_TeamBlue[1] = {48};
         npy_intp dims_TeamYellow[1] = {48};
         npy_intp dims_BallisInside[1] = {1};
-        //Определяем обычные указатели т.к. функция PyTuple_SetItem забирает права владения ссылкой на объект при присваивании
+        //Определяем обычные указатели т.к. далее функция PyTuple_SetItem забирает права владения ссылкой на объект при присваивании
         //Передача прав происходит даже при неудачном присвоении
         PyObject* py_List_Ball = PyArray_SimpleNewFromData(1,dims_Ball, NPY_FLOAT64, arguments[0]);
         PyObject* py_List_TeamBlue = PyArray_SimpleNewFromData(1, dims_TeamBlue, NPY_FLOAT64, arguments[1]);
@@ -93,96 +96,54 @@ void PyMainAlgWorker::run(double** arguments)
             throw CouldNotSetItemTupleException("py_Args",3,"py_List_BallisInside");
         }
 
+        //Запускаем Python функцию и получаем результат
         QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_Value(PyObject_CallObject(py_Method.data(), py_Args.data()));
         if (py_Value.isNull()){
-            throw CallMethodException("main_python_script","main");
+            throw CallMethodException(config.get_namePyMainScript(),config.get_namePyMainMethod());
         }
-        if (!PyTuple_Check(py_Value.data())){
-            throw NotTupleException("py_Value");
+        if (!PyList_Check(py_Value.data())){
+            throw NotArrayException("py_Value");
         }
-        if (PyTuple_Size(py_Value.data()) != 4){
-            throw WrongSizeTupleException("py_Value",4,static_cast<const int>(PyTuple_Size(py_Value.data())));
+        if (PyList_Size(py_Value.data()) != config.get_CONTROL_SIGNALS_AMOUNT()){
+            throw WrongSizeArrayException("py_Value",config.get_CONTROL_SIGNALS_AMOUNT(),static_cast<const int>(PyList_Size(py_Value.data())));
         }
 
-        /*
-         * PyTuple_GetItem возвращает заимствованную ссылку на возвращаемый объект
-         * Т.к. используются умные указатели, то необходимо увеличивать счетчик ссылок на 1
-         * Тем самым возвращаемое значение будет с полными правами
-        */
-        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_List_Ball_Back(PyTuple_GetItem(py_Value.data(),0));
-        Py_INCREF(py_List_Ball_Back.data());
-        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_List_TeamBlue_Back(PyTuple_GetItem(py_Value.data(),1));
-        Py_INCREF(py_List_TeamBlue_Back.data());
-        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_List_TeamYellow_Back(PyTuple_GetItem(py_Value.data(),2));
-        Py_INCREF(py_List_TeamYellow_Back.data());
-        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_List_BallisInside_Back(PyTuple_GetItem(py_Value.data(),3));
-        Py_INCREF(py_List_BallisInside_Back.data());
-
-
-        if (!PyArray_Check(py_List_Ball_Back.data())){
-            throw NotArrayException("py_List_Ball");
-        }
-        if (!PyArray_Check(py_List_TeamBlue_Back.data())){
-            throw NotArrayException("py_List_TeamBlue");
-        }
-        if (!PyArray_Check(py_List_TeamYellow_Back.data())){
-            throw NotArrayException("py_List_TeamYellow");
-        }
-        if (!PyArray_Check(py_List_BallisInside_Back.data())){
-            throw NotArrayException("py_List_BallisInside");
+        for (int i = 0; i < config.get_CONTROL_SIGNALS_AMOUNT(); i++){
+            if (!PyList_Check(PyList_GetItem(py_Value.data(),i))) {
+                throw NotArrayException("py_Value[" + to_string(i) +"]");
+            }
+            if (PyList_Size(PyList_GetItem(py_Value.data(),i)) != config.get_CONTROL_SIGNALS_LENGTH()) {
+                throw WrongSizeArrayException("py_Value[" + to_string(i) +"]",config.get_CONTROL_SIGNALS_LENGTH(),PyList_Size(PyList_GetItem(py_Value.data(),i)));
+            }
         }
 
 
-        if (PyArray_NDIM(py_List_Ball_Back.data()) != 1){
-            throw WrongDimArrayException("py_List_Ball",1,PyArray_NDIM(py_List_Ball_Back.data()));
-        }
-        if (PyArray_NDIM(py_List_TeamBlue_Back.data()) != 1){
-            throw WrongDimArrayException("py_List_TeamBlue",1,PyArray_NDIM(py_List_TeamBlue_Back.data()));
-        }
-        if (PyArray_NDIM(py_List_TeamYellow_Back.data()) != 1){
-            throw WrongDimArrayException("py_List_TeamYellow",1,PyArray_NDIM(py_List_TeamYellow_Back.data()));
-        }
-        if (PyArray_NDIM(py_List_BallisInside_Back.data()) != 1){
-            throw WrongDimArrayException("py_List_BallisInside",1,PyArray_NDIM(py_List_BallisInside_Back.data()));
+        double** controlSignals = new double*[config.get_CONTROL_SIGNALS_AMOUNT()];
+        for (int i = 0; i < config.get_CONTROL_SIGNALS_AMOUNT(); i++){
+            controlSignals[i] = new double[config.get_CONTROL_SIGNALS_LENGTH()];
         }
 
 
-        if (PyArray_DIMS(py_List_Ball_Back.data())[0] != 3){
-            throw WrongSizeArrayException("py_List_Ball",3,PyArray_DIMS(py_List_Ball_Back.data())[0]);
-        }
-        if (PyArray_DIMS(py_List_TeamBlue_Back.data())[0] != 48){
-            throw WrongSizeArrayException("py_List_TeamBlue",48,PyArray_DIMS(py_List_TeamBlue_Back.data())[0]);
-        }
-        if (PyArray_DIMS(py_List_TeamYellow_Back.data())[0] != 48){
-            throw WrongSizeArrayException("py_List_TeamYellow",48,PyArray_DIMS(py_List_TeamYellow_Back.data())[0]);
-        }
-        if (PyArray_DIMS(py_List_BallisInside_Back.data())[0] != 1){
-            throw WrongSizeArrayException("py_List_BallisInside",1,PyArray_DIMS(py_List_BallisInside_Back.data())[0]);
+        for (int i = 0; i < config.get_CONTROL_SIGNALS_AMOUNT(); i++){
+            for (int j = 0; j < config.get_CONTROL_SIGNALS_LENGTH(); j++){
+                controlSignals[i][j] = PyFloat_AsDouble(PyList_GetItem(PyList_GetItem(py_Value.data(),i),j));
+                //Если скастилось неудачно, то Python выставит ошибку и мы выбрасываем свою ошибку
+                if (PyErr_Occurred()) {
+                    throw CouldNotCastToDouble();
+                }
+            }
         }
 
-        double* return_list_Ball = reinterpret_cast<double*>PyArray_DATA(py_List_Ball_Back.data());
-        double* return_list_TeamBlue = reinterpret_cast<double*>PyArray_DATA(py_List_TeamBlue_Back.data());
-        double* return_list_TeamYellow = reinterpret_cast<double*>PyArray_DATA(py_List_TeamYellow_Back.data());
-        double* return_list_BallisInside = reinterpret_cast<double*>PyArray_DATA(py_List_BallisInside_Back.data());
+        //На этом моменте у нас есть готовый массив массивов с управляющими сигналами для роботов
 
-        cout<<"Return of call: "<<endl<<" [ ";
-        for (int i = 0; i < dims_Ball[0]; i++){
-            cout<<return_list_Ball[i]<<" ";
+        cout<<"Return of call: "<<endl;
+        for (int i = 0; i < config.get_CONTROL_SIGNALS_AMOUNT(); i++){
+            cout<<" [ ";
+            for (int j = 0; j < config.get_CONTROL_SIGNALS_LENGTH(); j++){
+                cout<<controlSignals[i][j]<<" ";
+            }
+            cout<<"]"<<endl;
         }
-        cout<<"]"<<endl<<" [";
-        for (int i = 0; i < dims_TeamBlue[0]; i++){
-            cout<<return_list_TeamBlue[i]<<" ";
-        }
-        cout<<"]"<<endl<<" [";
-        for (int i = 0; i < dims_TeamYellow[0]; i++){
-            cout<<return_list_TeamYellow[i]<<" ";
-        }
-        cout<<"]"<<endl<<" [";
-        for (int i = 0; i < dims_BallisInside[0]; i++){
-            cout<<return_list_BallisInside[i]<<" ";
-        }
-        cout<<"]"<<endl;
-
 
     } catch (Exception& e) {
         cerr<<e.message()<<endl;
@@ -190,7 +151,7 @@ void PyMainAlgWorker::run(double** arguments)
     }
 }
 
-int PyMainAlgWorker::start(const char* name)
+int PyMainAlgWorker::startPython(const char* name)
 {
     /*
     wchar_t* program[1];
@@ -216,10 +177,15 @@ int PyMainAlgWorker::start(const char* name)
     //Использую Numpy C API
     //Вызывать только после Py_SetProgramName и Py_Initialize
     import_array();
+
+    pythonStart = true;
+
     return 0;
 }
 
-void PyMainAlgWorker::stop()
+void PyMainAlgWorker::stopPython()
 {
     Py_Finalize();
+    pythonStart = false;
 }
+

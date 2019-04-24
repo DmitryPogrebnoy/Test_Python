@@ -25,6 +25,8 @@ def main(list_Ball,list_TeamBlue,list_TeamYellow,list_BallisInside):
     plt.savefig("result.png")
     c = vector1 + vector2
     """
-    c = (list_Ball, list_TeamBlue, list_TeamYellow, list_BallisInside)
+    q = [0]*7
+    c = [q]*4
     print(type(c))
+    print(c)
     return c

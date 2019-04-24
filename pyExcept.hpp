@@ -1,22 +1,7 @@
 #ifndef PYEXCEPTION_H
 #define PYEXCEPTION_H
 
-#include <string>
-using namespace std;
-
-class Exception{
-public:
-    //Constructor
-    explicit Exception(const string &msg): msg(msg)
-    {}
-    //Get error message
-    string message() const {
-        return msg;
-    }
-private:
-    //Error message
-    string msg;
-};
+#include "except.hpp"
 
 class DecodeException: public Exception
 {
@@ -75,31 +60,16 @@ public:
     {}
 };
 
-class WrongDimArrayException: public Exception
+class CouldNotCastToDouble: public Exception
 {
 public:
-    explicit WrongDimArrayException(const string &arrayName, const int &expectedValue, const int &currentValue)
-        : Exception("'" + arrayName + "' array has the wrong dimension. Expected value: "
-                    + to_string(expectedValue) + ". Current value: " + to_string(currentValue) + ".")
+    explicit CouldNotCastToDouble()
+        : Exception("Could not cast to double.")
     {}
 };
 
-class NotTupleException: public Exception
-{
-public:
-    explicit NotTupleException(const string &tupleName)
-        : Exception("'" + tupleName + "' is not a tuple")
-    {}
-};
 
-class WrongSizeTupleException: public Exception
-{
-public:
-    explicit WrongSizeTupleException(const string &tupleName, const int &expectedValue, const int &currentValue)
-        : Exception("'" + tupleName + "' tuple has the wrong size. Expected value: " + to_string(expectedValue)
-                    + ". Current value: " + to_string(currentValue) + ".")
-    {}
-};
+
 
 class CouldNotSetItemTupleException: public Exception
 {

@@ -31,9 +31,9 @@ int main(int argc, char *argv[])
     PyMainAlgWorker pyWorker;
     pyRunner pyRunner;
 
-    QObject::connect(&pyRunner, SIGNAL(start(const char*)),&pyWorker, SLOT(start(const char*)));
+    QObject::connect(&pyRunner, SIGNAL(startPython(const char*)),&pyWorker, SLOT(startPython(const char*)));
     QObject::connect(&pyRunner, SIGNAL(run(double**)),&pyWorker, SLOT(run(double**)));
-    QObject::connect(&pyRunner, SIGNAL(stop()),&pyWorker, SLOT(stop()));
+    QObject::connect(&pyRunner, SIGNAL(stopPython()),&pyWorker, SLOT(stopPython()));
 
     pyRunner.start_signal(argv[0]);
 

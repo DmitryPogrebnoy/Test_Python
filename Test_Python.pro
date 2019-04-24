@@ -11,7 +11,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    pyMainAlgWorker.cpp
+    pyMainAlgWorker.cpp \
+    pyAlgConfig.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -24,7 +25,10 @@ HEADERS += \
     pyMainAlgWorker.hpp \
     pyScopedPointerDeleter.hpp \
     pyRunner.hpp \
-    pyExcept.hpp
+    pyExcept.hpp \
+    pyAlgConfig.hpp \
+    except.hpp \
+    parseConfigExcept.hpp
 
 
 message($$(PYTHONLIB))

@@ -1,0 +1,5 @@
+name=RoboFootball
+namePyMainScript=main_python_script
+namePyMainMethod=main
+CONTROL_SIGNALS_AMOUNT=4
+CONTROL_SIGNALS_LENGTH=7
