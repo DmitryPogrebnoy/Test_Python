@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
     QObject::connect(&pyRunner, SIGNAL(startPython(const char*)),&pyWorker, SLOT(startPython(const char*)));
     QObject::connect(&pyRunner, SIGNAL(run(double**)),&pyWorker, SLOT(run(double**)));
     QObject::connect(&pyRunner, SIGNAL(stopPython()),&pyWorker, SLOT(stopPython()));
+    QObject::connect(&pyRunner, SIGNAL(pause_unpause()),&pyWorker, SLOT(pause_unpause()));
 
     pyRunner.start_signal(argv[0]);
 
@@ -51,7 +52,19 @@ int main(int argc, char *argv[])
     }
     arguments[3][0] = 0;
 
+    PyRun_SimpleString("import pause");
+    PyRun_SimpleString("print(pause.PAUSE)");
+
+    pyRunner.pause_unpause_signal();
+
     pyRunner.run_signal(arguments);
+
+    pyRunner.pause_unpause_signal();
+
+    pyRunner.run_signal(arguments);
+
+    PyRun_SimpleString("print(pause.PAUSE)");
+
 
     for (int i = 0; i < 4; i++){
         delete [] arguments[i];

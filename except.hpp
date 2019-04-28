@@ -7,14 +7,14 @@ using namespace std;
 class Exception{
 public:
     //Constructor
-    explicit Exception(const std::string &msg): msg(msg)
+    explicit Exception(const string &msg): msg(msg)
     {}
     //Get error message
-    std::string message() const {
+    string message() const {
         return msg;
     }
 private:
     //Error message
-    std::string msg;
+    string msg;
 };
 #endif // EXCEPT_H

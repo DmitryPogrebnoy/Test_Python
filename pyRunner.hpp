@@ -18,10 +18,14 @@ public:
     void stop_signal(){
         emit stopPython();
     }
+    void pause_unpause_signal(){
+        emit pause_unpause();
+    }
 signals:
     void startPython(const char*);
     void stopPython();
     void run(double**);
+    void pause_unpause();
 };
 
 #endif // PYRUNNER_HPP

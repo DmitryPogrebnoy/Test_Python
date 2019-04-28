@@ -145,7 +145,7 @@ void PyMainAlgWorker::run(double** arguments)
             cout<<"]"<<endl;
         }
 
-    } catch (Exception& e) {
+    } catch (pyException& e) {
         cerr<<e.message()<<endl;
         if (PyErr_Occurred()) PyErr_Print();
     }
@@ -189,3 +189,40 @@ void PyMainAlgWorker::stopPython()
     pythonStart = false;
 }
 
+void PyMainAlgWorker::pause_unpause(){
+    try{
+        //Set sys.argv[0] = config.namePyMainScript
+        wchar_t* py_argv_init[1];
+        QScopedArrayPointer<wchar_t*,ScopedSingleElemArrayPointerPy_DecodeLocaleDeleter> py_argv(py_argv_init);
+        py_argv[0] = Py_DecodeLocale(config.get_namePyPauseScript().c_str(), nullptr);
+        if(py_argv.isNull()){
+            throw DecodeException(config.get_namePyPauseScript());
+        }
+        PySys_SetArgv(1, py_argv.data());
+
+        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_NameModule(PyUnicode_DecodeFSDefault(config.get_namePyPauseScript().c_str()));
+        if (py_NameModule.isNull()) {
+            throw DecodeException(config.get_namePyPauseScript());
+        }
+
+        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_Module(PyImport_Import(py_NameModule.data()));
+        if (py_Module.isNull()) {
+            throw ModuleNotFoundException(config.get_namePyPauseScript());
+        }
+
+        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_Method(PyObject_GetAttrString(py_Module.data(), config.get_namePyPauseMethod().c_str()));
+        if (py_Method.isNull() || !PyCallable_Check(py_Method.data())) {
+            throw MethodNotFoundException(config.get_namePyPauseScript(), config.get_namePyPauseMethod());
+        }
+
+
+        QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_Value(PyObject_CallObject(py_Method.data(), nullptr));
+        if (py_Value.isNull()){
+            throw CallMethodException(config.get_namePyPauseScript(), config.get_namePyPauseMethod());
+        }
+
+    } catch (pyException& e) {
+        cerr<<e.message()<<endl;
+        if (PyErr_Occurred()) PyErr_Print();
+    }
+}

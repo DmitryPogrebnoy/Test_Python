@@ -6,10 +6,13 @@ using namespace std;
 /* Пример конфигурации, которая спарсится:
  *
  * name=RoboFootball
- * namePyMainScript=main_python_script
+ * namePyMainScript=main
  * namePyMainMethod=main
+ * namePyPauseScript=pause
+ * namePyPauseMethod=pause_unpause
  * CONTROL_SIGNALS_AMOUNT=4
  * CONTROL_SIGNALS_LENGTH=7
+ *
  *
  * Парсится строго в этом порядке и строго в этом виде.
  * При неудачной попытке распарсить выставляются значения по умолчанию.
@@ -41,6 +44,18 @@ pyAlgConfig::pyAlgConfig(){
         } else throw notFullConfigException("namePyMainMethod", "pyAlgConfig.cnf");
 
         if (getline(configFile, line)) {
+            if (line.find("namePyPauseScript=") != string::npos){
+                namePyPauseScript = line.substr(line.find('=') + 1);
+            } else throw parseConfigException("namePyPauseScript=","pyAlgConfig.cnf");
+        } else throw notFullConfigException("namePyPauseScript", "pyAlgConfig.cnf");
+
+        if (getline(configFile, line)) {
+            if (line.find("namePyPauseMethod=") != string::npos){
+                namePyPauseMethod = line.substr(line.find('=') + 1);
+            } else throw parseConfigException("namePyPauseMethod=","pyAlgConfig.cnf");
+        } else throw notFullConfigException("namePyPauseMethod", "pyAlgConfig.cnf");
+
+        if (getline(configFile, line)) {
             if (line.find("CONTROL_SIGNALS_AMOUNT=") != string::npos){
                 CONTROL_SIGNALS_AMOUNT = atoi(line.substr(line.find('=') + 1).c_str());
             } else throw parseConfigException("CONTROL_SIGNALS_AMOUNT=","pyAlgConfig.cnf");
@@ -55,13 +70,17 @@ pyAlgConfig::pyAlgConfig(){
         cout<<"name = "<<name<<endl
             <<"namePyMainScript = "<<namePyMainScript<<endl
             <<"namePyMainMethod = "<<namePyMainMethod<<endl
+            <<"namePyPauseScript = "<<namePyPauseScript<<endl
+            <<"namePyPauseMethod = "<<namePyPauseMethod<<endl
             <<"CONTROL_SIGNALS_AMOUNT = "<<CONTROL_SIGNALS_AMOUNT<<endl
             <<"CONTROL_SIGNALS_LENGTH = "<<CONTROL_SIGNALS_LENGTH<<endl
             <<"Config file successfully parsed."<<endl;
     } catch (const ifstream::failure) {
         name = "Robofootball";
-        namePyMainScript = "main_python_script";
+        namePyMainScript = "main";
         namePyMainMethod = "main";
+        namePyPauseScript = "pause";
+        namePyPauseMethod = "pause_unpause";
         CONTROL_SIGNALS_AMOUNT = 6;
         CONTROL_SIGNALS_LENGTH = 7;
 
@@ -70,12 +89,16 @@ pyAlgConfig::pyAlgConfig(){
             <<"name = "<<name<<endl
             <<"namePyMainScript = "<<namePyMainScript<<endl
             <<"namePyMainMethod = "<<namePyMainMethod<<endl
+            <<"namePyPauseScript = "<<namePyPauseScript<<endl
+            <<"namePyPauseMethod = "<<namePyPauseMethod<<endl
             <<"CONTROL_SIGNALS_AMOUNT = "<<CONTROL_SIGNALS_AMOUNT<<endl
             <<"CONTROL_SIGNALS_LENGTH = "<<CONTROL_SIGNALS_LENGTH<<endl;
     } catch (const parseException e) {
         name = "Robofootball";
-        namePyMainScript = "main_python_script";
+        namePyMainScript = "main";
         namePyMainMethod = "main";
+        namePyPauseScript = "pause";
+        namePyPauseMethod = "pause_unpause";
         CONTROL_SIGNALS_AMOUNT = 6;
         CONTROL_SIGNALS_LENGTH = 7;
 
@@ -84,12 +107,17 @@ pyAlgConfig::pyAlgConfig(){
             <<"name = "<<name<<endl
             <<"namePyMainScript = "<<namePyMainScript<<endl
             <<"namePyMainMethod = "<<namePyMainMethod<<endl
+            <<"namePyPauseScript = "<<namePyPauseScript<<endl
+            <<"namePyPauseMethod = "<<namePyPauseMethod<<endl
             <<"CONTROL_SIGNALS_AMOUNT = "<<CONTROL_SIGNALS_AMOUNT<<endl
             <<"CONTROL_SIGNALS_LENGTH = "<<CONTROL_SIGNALS_LENGTH<<endl;
     }
 }
-pyAlgConfig::pyAlgConfig(const pyAlgConfig &conf) : name(conf.name), namePyMainScript(conf.namePyMainScript),
+pyAlgConfig::pyAlgConfig(const pyAlgConfig &conf) : name(conf.name),
+                                                    namePyMainScript(conf.namePyMainScript),
                                                     namePyMainMethod(conf.namePyMainMethod),
+                                                    namePyPauseScript(conf.namePyPauseScript),
+                                                    namePyPauseMethod(conf.namePyPauseMethod),
                                                     CONTROL_SIGNALS_AMOUNT(conf.CONTROL_SIGNALS_AMOUNT),
                                                     CONTROL_SIGNALS_LENGTH(conf.CONTROL_SIGNALS_LENGTH){
 
@@ -103,6 +131,12 @@ string pyAlgConfig::get_namePyMainScript() const {
 }
 string pyAlgConfig::get_namePyMainMethod() const {
     return namePyMainMethod;
+}
+string pyAlgConfig::get_namePyPauseScript() const {
+    return namePyPauseScript;
+}
+string pyAlgConfig::get_namePyPauseMethod() const {
+    return namePyPauseMethod;
 }
 int pyAlgConfig::get_CONTROL_SIGNALS_AMOUNT() const {
     return CONTROL_SIGNALS_AMOUNT;

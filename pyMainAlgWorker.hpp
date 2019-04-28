@@ -19,10 +19,10 @@ public slots:
     int startPython(const char* name);
     void stopPython();
     void run(double** arguments);
+    void pause_unpause();
 
 private:
     pyAlgConfig config;
-    bool workerStart;
     bool pythonStart;
 };
 
