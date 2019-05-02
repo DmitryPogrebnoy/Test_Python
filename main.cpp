@@ -31,12 +31,18 @@ int main(int argc, char *argv[])
     PyMainAlgWorker pyWorker;
     pyRunner pyRunner;
 
-    QObject::connect(&pyRunner, SIGNAL(startPython(const char*)),&pyWorker, SLOT(startPython(const char*)));
+    QObject::connect(&pyRunner, SIGNAL(startPython(const QString)),&pyWorker, SLOT(startPython(const QString)));
     QObject::connect(&pyRunner, SIGNAL(run(double**)),&pyWorker, SLOT(run(double**)));
     QObject::connect(&pyRunner, SIGNAL(stopPython()),&pyWorker, SLOT(stopPython()));
     QObject::connect(&pyRunner, SIGNAL(pause_unpause()),&pyWorker, SLOT(pause_unpause()));
+    QObject::connect(&pyRunner, SIGNAL(setPyScriptsDir(const QString)),&pyWorker, SLOT(setPyScriptsDir(const QString)));
+
 
     pyRunner.start_signal(argv[0]);
+
+    const QString dir= "C:/Users/pogre/Desktop/Test_Python/PYScripts/";
+    pyRunner.set_py_scripts_dir(dir);
+
 
     double** arguments = new double*[4];
     arguments[0] = new double[3];
@@ -77,5 +83,3 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
-
-

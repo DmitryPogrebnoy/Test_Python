@@ -82,7 +82,7 @@ pyAlgConfig::pyAlgConfig(){
         namePyPauseScript = "pause";
         namePyPauseMethod = "pause_unpause";
         CONTROL_SIGNALS_AMOUNT = 6;
-        CONTROL_SIGNALS_LENGTH = 7;
+        CONTROL_SIGNALS_LENGTH = 6;
 
         cerr<<"File 'pyAlgConfig.cnf' is not found."<<endl
             <<"The default values are set:"<<endl
@@ -100,7 +100,7 @@ pyAlgConfig::pyAlgConfig(){
         namePyPauseScript = "pause";
         namePyPauseMethod = "pause_unpause";
         CONTROL_SIGNALS_AMOUNT = 6;
-        CONTROL_SIGNALS_LENGTH = 7;
+        CONTROL_SIGNALS_LENGTH = 6;
 
         cerr<<e.message()<<endl
             <<"The default values are set:"<<endl

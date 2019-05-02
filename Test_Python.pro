@@ -12,14 +12,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     pyMainAlgWorker.cpp \
-    pyAlgConfig.cpp
+    pyAlgConfig.cpp \
+    message.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES +=
+DISTFILES += \
+    PYScripts/logging.conf \
+    PYScripts/logger.py \
+    PYScripts/main.py \
+    PYScripts/pause.py
 
 HEADERS += \
     pyMainAlgWorker.hpp \
@@ -28,7 +33,8 @@ HEADERS += \
     pyExcept.hpp \
     pyAlgConfig.hpp \
     except.hpp \
-    parseConfigExcept.hpp
+    parseConfigExcept.hpp \
+    message.h
 
 
 message($$(PYTHONLIB))

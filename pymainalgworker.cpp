@@ -20,37 +20,54 @@
 // Использую версию 1.16.2
 #include <arrayobject.h>
 
-//Почему-то все работает и без этих двух include хотя не должно
-//#include <QScopedArrayPointer>
-//#include <QScopedPointer>
 
 #include <iostream>
 #include <fstream>
 
+//Мои хедeры
 #include "pyExcept.hpp"
 #include "pyScopedPointerDeleter.hpp"
 
+//Хедеры из проекта
+#include "message.h"
 using namespace std;
 
 
 PyMainAlgWorker::PyMainAlgWorker(){
     cout << "pyMainAlg worker start" << endl;
+    isBallInside = false;
+
+    timer_scope = 0;
+    timer_max = 0;
+    timer_check = clock();
+    timer_sum = 0;
+
+    countCallPython = 0;
+
+    //Тут еще должна быть инициализация client если он всетаки нужен
 }
 
 PyMainAlgWorker::~PyMainAlgWorker(){}
 
 void PyMainAlgWorker::run(double** arguments)
 {
-    try{
-        //Set sys.argv[0] = config.namePyMainScript
-        wchar_t* py_argv_init[1];
-        QScopedArrayPointer<wchar_t*,ScopedSingleElemArrayPointerPy_DecodeLocaleDeleter> py_argv(py_argv_init);
-        py_argv[0] = Py_DecodeLocale(config.get_namePyMainScript().c_str(), nullptr);
-        if(py_argv.isNull()){
-            throw DecodeException(config.get_namePyMainScript());
-        }
-        PySys_SetArgv(1, py_argv.data());
+    timer_scope = clock();
+    countCallPython++;
 
+    int** controlSignals = new int*[config.get_CONTROL_SIGNALS_AMOUNT()];
+    for (int i = 0; i < config.get_CONTROL_SIGNALS_AMOUNT(); i++){
+        controlSignals[i] = new int[config.get_CONTROL_SIGNALS_LENGTH()];
+    }
+
+    //Инициализируем нулями
+    for (int i = 0; i < config.get_CONTROL_SIGNALS_AMOUNT(); i++){
+        for (int j = 0; j < config.get_CONTROL_SIGNALS_LENGTH(); j++){
+            controlSignals[i][j] = 0;
+        }
+    }
+
+    //Запускаем вычисление управляющих сигналов в Python скрипте
+    try{
         QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_NameModule(PyUnicode_DecodeFSDefault(config.get_namePyMainScript().c_str()));
         if (py_NameModule.isNull()) {
             throw DecodeException(config.get_namePyMainScript());
@@ -118,16 +135,16 @@ void PyMainAlgWorker::run(double** arguments)
         }
 
 
-        double** controlSignals = new double*[config.get_CONTROL_SIGNALS_AMOUNT()];
-        for (int i = 0; i < config.get_CONTROL_SIGNALS_AMOUNT(); i++){
-            controlSignals[i] = new double[config.get_CONTROL_SIGNALS_LENGTH()];
-        }
-
-
+        /*
+         * Преобразовываем значения возвращенные Python в массивы int
+         * Важно, что возвращаем числовые значения, которые влезают в int иначе
+         * если не влезает в long, то выбрасываем исключение
+         * если влезает в long, то теряем старшие биты
+         */
         for (int i = 0; i < config.get_CONTROL_SIGNALS_AMOUNT(); i++){
             for (int j = 0; j < config.get_CONTROL_SIGNALS_LENGTH(); j++){
-                controlSignals[i][j] = PyFloat_AsDouble(PyList_GetItem(PyList_GetItem(py_Value.data(),i),j));
-                //Если скастилось неудачно, то Python выставит ошибку и мы выбрасываем свою ошибку
+                controlSignals[i][j] = static_cast<int>(PyLong_AsLong(PyList_GetItem(PyList_GetItem(py_Value.data(),i),j)));
+                //Если скастилось неудачно, то Python выставит ошибку и мы выбрасываем исключение
                 if (PyErr_Occurred()) {
                     throw CouldNotCastToDouble();
                 }
@@ -135,44 +152,118 @@ void PyMainAlgWorker::run(double** arguments)
         }
 
         //На этом моменте у нас есть готовый массив массивов с управляющими сигналами для роботов
-
-        cout<<"Return of call: "<<endl;
-        for (int i = 0; i < config.get_CONTROL_SIGNALS_AMOUNT(); i++){
-            cout<<" [ ";
-            for (int j = 0; j < config.get_CONTROL_SIGNALS_LENGTH(); j++){
-                cout<<controlSignals[i][j]<<" ";
-            }
-            cout<<"]"<<endl;
-        }
+        //Важно чтобы длина и количество управляющих сигналов возвращаемых из Python скрипта
+        //совпадала с настройками config иначе выбросится ошибка
 
     } catch (pyException& e) {
         cerr<<e.message()<<endl;
         if (PyErr_Occurred()) PyErr_Print();
     }
+
+    //Отправка, пришедших из Python скрипта, управлющих сигналов на роботов
+    /*
+     * Считаем, что Python script возвращает управляющие сигналы,
+     *  каждый из которых это 6 интов, где
+     * 1 - номер робота
+     * 2 - SpeedX
+     * 3 - SpeedY
+     * 4 - kickForward
+     * 5 - SpeedR
+     * 6 - kickUp
+    */
+    for(int i = 0; i < config.get_CONTROL_SIGNALS_AMOUNT(); i++){
+        Message msg;
+
+        msg.setKickVoltageLevel(12);
+        msg.setKickerChargeEnable(1);
+
+        msg.setSpeedX(controlSignals[i][1]);
+        msg.setSpeedY(controlSignals[i][2]);
+        msg.setKickForward(controlSignals[i][3]);
+        msg.setSpeedR(controlSignals[i][4]);
+        msg.setKickUp(controlSignals[i][5]);
+
+        QByteArray command = msg.generateByteArray();
+
+        emit pySendToConnector(i+1,command);
+    }
+
+
+    //Раз в секунду создаем пакет статистики и отправляем в GUI
+    timer_scope = clock() - timer_scope;
+    if (timer_scope > timer_max)
+        timer_max = timer_scope;
+
+    timer_sum = timer_sum + timer_scope;
+
+    if (clock() - timer_check > CLOCKS_PER_SEC){
+        timer_check = clock();
+
+        QString temp;
+        QString toStatus = "Using Python: count call = ";
+        temp.setNum(countCallPython);
+        toStatus = toStatus + temp;
+
+        toStatus = toStatus + ", mean time = ";
+        temp.setNum(timer_sum/countCallPython);
+        toStatus = toStatus + temp;
+
+        toStatus = toStatus + ", max time = ";
+        temp.setNum(timer_max);
+        toStatus = toStatus + temp;
+
+        toStatus = toStatus + ", sum time = ";
+        temp.setNum(timer_sum);
+        toStatus = toStatus + temp;
+
+        timer_sum = 0;
+        timer_max = 0;
+        countCallPython = 0;
+
+        emit pyStatusMessage(toStatus);
+
+        // !!ДАЛЬШЕ ИДЕТ КАКАЯ-ТО ДИЧь
+    }
+
+    //Освобождаем память
+    for (int i = 0; i < config.get_CONTROL_SIGNALS_AMOUNT(); i++){
+        delete [] controlSignals[i];
+    }
+    delete [] controlSignals;
+
+    //Сообщаем ресиверу о готовности обработки нового пакета.
+    emit pyMainAlgFree();
 }
 
-int PyMainAlgWorker::startPython(const char* name)
+int PyMainAlgWorker::startPython(const QString name)
 {
-    /*
-    wchar_t* program[1];
-    QScopedArrayPointer<wchar_t*,ScopedSingleElemArrayPointerPy_DecodeLocaleDeleter> programName(program);
-    programName[0] = Py_DecodeLocale(name, nullptr);
+    //По документации нужно сохранять в промежуточный QByteArray иначе крашится
+    QByteArray byte_array_name = name.toLocal8Bit();
+    wchar_t* programName = Py_DecodeLocale(byte_array_name.data(), nullptr);
     if (programName == nullptr) {
         cerr<<"Fatal error: cannot decode argv[0]\n"<<endl;
         exit(1);
     }
-    Py_SetProgramName((programName.data())[0]);
-    */
+    Py_SetProgramName(programName);
+    PyMem_RawFree(programName);
+
 
     Py_Initialize();
 
-    /*
-    //Выставляем путь до используемых скриптов(python логгера и т.д.), по умолчанию путь до директории с запускаемым приложением.
+    //Set python sys.argv[0] = "LACRmaCS Python algorithm"
+    //Т.к. некоторые модули падают(например pyplot), если sys.argv пустой
+    QScopedPointer<wchar_t,ScopedPointerPy_DecodeLocaleDeleter> py_argv((Py_DecodeLocale("LACRmaCS Python algorithm", nullptr)));
+    if(py_argv.isNull()){
+        throw DecodeException(config.get_namePyMainScript());
+    }
+    wchar_t* set_argv = py_argv.data();
+    PySys_SetArgv(1, &set_argv);
+
+
+    //Подключаем необходимые модули в питоне, чтобы потом можно было выставлять пути до папки со скриптами
     PyRun_SimpleString(
        "import sys\n"
-       "sys.path.append('C:/Users/pogre/Downloads')\n"
     );
-    */
 
     //Использую Numpy C API
     //Вызывать только после Py_SetProgramName и Py_Initialize
@@ -191,15 +282,6 @@ void PyMainAlgWorker::stopPython()
 
 void PyMainAlgWorker::pause_unpause(){
     try{
-        //Set sys.argv[0] = config.namePyMainScript
-        wchar_t* py_argv_init[1];
-        QScopedArrayPointer<wchar_t*,ScopedSingleElemArrayPointerPy_DecodeLocaleDeleter> py_argv(py_argv_init);
-        py_argv[0] = Py_DecodeLocale(config.get_namePyPauseScript().c_str(), nullptr);
-        if(py_argv.isNull()){
-            throw DecodeException(config.get_namePyPauseScript());
-        }
-        PySys_SetArgv(1, py_argv.data());
-
         QScopedPointer<PyObject, ScopedPointerPyObjectDeleter> py_NameModule(PyUnicode_DecodeFSDefault(config.get_namePyPauseScript().c_str()));
         if (py_NameModule.isNull()) {
             throw DecodeException(config.get_namePyPauseScript());
@@ -225,4 +307,14 @@ void PyMainAlgWorker::pause_unpause(){
         cerr<<e.message()<<endl;
         if (PyErr_Occurred()) PyErr_Print();
     }
+}
+
+void PyMainAlgWorker::setPyScriptsDir(const QString dir){
+
+    PyRun_SimpleString(
+                (string("sys.path.append('")  + dir.toStdString() + "')\n").c_str());
+}
+
+void PyMainAlgWorker::changeBallStatus(bool ballStatus){
+    isBallInside = ballStatus;
 }

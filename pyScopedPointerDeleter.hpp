@@ -18,9 +18,9 @@
  * На 32 битной версии этого бага может не быть.
  */
 
-struct ScopedSingleElemArrayPointerPy_DecodeLocaleDeleter{
-    static inline void cleanup(wchar_t* py_argv[1]){
-        PyMem_RawFree(py_argv[0]);
+struct ScopedPointerPy_DecodeLocaleDeleter{
+    static inline void cleanup(wchar_t* py_argv){
+        PyMem_RawFree(py_argv);
     }
 };
 
