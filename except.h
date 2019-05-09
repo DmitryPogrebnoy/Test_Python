@@ -1,20 +1,19 @@
 #ifndef EXCEPT_H
 #define EXCEPT_H
 
-#include <string>
-using namespace std;
+#include <QString>
 
 class Exception{
 public:
     //Constructor
-    explicit Exception(const string &msg): msg(msg)
+    explicit Exception(const QString &msg): msg(msg)
     {}
     //Get error message
-    string message() const {
+    QString message() const {
         return msg;
     }
 private:
     //Error message
-    string msg;
+    QString msg;
 };
 #endif // EXCEPT_H

@@ -1,7 +1,0 @@
-name=RoboFootball
-namePyMainScript=main
-namePyMainMethod=main
-namePyPauseScript=pause
-namePyPauseMethod=pause_unpause
-CONTROL_SIGNALS_AMOUNT=4
-CONTROL_SIGNALS_LENGTH=6

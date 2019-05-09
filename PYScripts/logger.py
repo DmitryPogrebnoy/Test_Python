@@ -5,7 +5,7 @@ import os
 #Конфиг файл для логгера лежит там же где и все скрипты - в PYScripts
 path_to_logger_config = os.path.join(os.path.dirname(os.path.abspath(__file__))
                                                          ,"logging.conf")
-print(path_to_logger_config)
+
 logging.config.fileConfig(path_to_logger_config)
 
 main_logger = logging.getLogger("mainLogger")

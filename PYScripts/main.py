@@ -1,14 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-from logger import main_logger
 
+from logger import main_logger
 import pause
+
+import datetime
 
 def main(list_Ball,list_TeamBlue,list_TeamYellow,list_BallisInside):
     main_logger.info("Start main script")
     
-    
+    #main_logger.info("QQQQ")
+    print(datetime.datetime.now())
     #print(sys.argv)
     #print(sys.path)
     #print(list_Ball)
@@ -22,9 +25,10 @@ def main(list_Ball,list_TeamBlue,list_TeamYellow,list_BallisInside):
     #Заменяя обычный импорт этим from <name module> import <...> можно использовать 
     #неквалифицированные имена
     
-    q = [1]*6 if not pause.PAUSE else [0]*6
-    c = [q]*4
+    q = [1]*7 if not pause.PAUSE else [0]*7
+    c = [q]*12
     #print(type(c))
     #print(c)
+    
     return c
     

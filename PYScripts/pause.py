@@ -16,3 +16,5 @@ def pause_unpause():
     PAUSE = False if PAUSE else True
     print("Switch PAUSE from", old_PAUSE, "to", PAUSE, sep=" ")
     
+    return PAUSE
+    
